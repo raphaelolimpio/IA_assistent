@@ -1,9 +1,4 @@
-# nlp/processing.py
-
 def processar_texto(texto):
-    """
-    Processa o texto para identificar a intenção do usuário.
-    """
     if texto is None:
         return "nenhuma_intencao"
 
