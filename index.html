@@ -351,7 +351,7 @@
         <section id="modulos" class="section-card">
             <h2 class="section-title">Detalhamento dos Módulos e Racional de Escolha</h2>
             <p class="content-text mb-6">
-                Cada módulo do projeto Aurora tem um propósito específico. Clique em cada um para expandir e ver mais detalhes sobre suas funções e dependências, e o racional por trás de sua escolha. Use o botão "Resumir Seção" para um resumo rápido via IA, ou "Gerar Pergunta de Entrevista" para testar seus conhecimentos!
+                Cada módulo do projeto Aurora tem um propósito específico. Clique em cada um para expandir e ver mais detalhes sobre suas funções e dependências, e o racional por trás de sua escolha. Use o botão "Resumir Seção" para um resumo rápido via IA!
             </p>
             
             <div class="space-y-3">
@@ -373,10 +373,8 @@
                         <p class="content-text mt-2"><strong>Observações:</strong> A criação de um novo objeto <code>sr.Recognizer()</code> a cada chamada de <code>ouvir_microfone()</code> ajuda a reiniciar os recursos do microfone, mitigando problemas de escuta contínua em alguns sistemas.</p>
                         <div class="llm-button-group">
                             <button class="summarize-button px-4 py-2 bg-[#A0AEC0] text-white rounded-md hover:bg-[#6C757D] transition-colors duration-200">Resumir Seção ✨</button>
-                            <button class="interview-question-button px-4 py-2 bg-[#6C757D] text-white rounded-md hover:bg-[#495057] transition-colors duration-200">Gerar Pergunta de Entrevista ✨</button>
                         </div>
                         <div class="summary-output mt-2 text-sm text-gray-700"></div>
-                        <div class="interview-question-output mt-2 text-sm text-gray-700"></div>
                         <div class="loading-indicator hidden mt-2 text-sm text-[#6C757D]">Gerando...</div>
                     </div>
                 </div>
@@ -410,10 +408,8 @@
                         </ul>
                         <div class="llm-button-group">
                             <button class="summarize-button px-4 py-2 bg-[#A0AEC0] text-white rounded-md hover:bg-[#6C757D] transition-colors duration-200">Resumir Seção ✨</button>
-                            <button class="interview-question-button px-4 py-2 bg-[#6C757D] text-white rounded-md hover:bg-[#495057] transition-colors duration-200">Gerar Pergunta de Entrevista ✨</button>
                         </div>
                         <div class="summary-output mt-2 text-sm text-gray-700"></div>
-                        <div class="interview-question-output mt-2 text-sm text-gray-700"></div>
                         <div class="loading-indicator hidden mt-2 text-sm text-[#6C757D]">Gerando...</div>
                     </div>
                 </div>
@@ -436,10 +432,8 @@
                         <p class="content-text mt-2">Promove o padrão de "controlador" que delega tarefas aos módulos especializados, mantendo o <code>assistant.py</code> focado no fluxo geral.</p>
                         <div class="llm-button-group">
                             <button class="summarize-button px-4 py-2 bg-[#A0AEC0] text-white rounded-md hover:bg-[#6C757D] transition-colors duration-200">Resumir Seção ✨</button>
-                            <button class="interview-question-button px-4 py-2 bg-[#6C757D] text-white rounded-md hover:bg-[#495057] transition-colors duration-200">Gerar Pergunta de Entrevista ✨</button>
                         </div>
                         <div class="summary-output mt-2 text-sm text-gray-700"></div>
-                        <div class="interview-question-output mt-2 text-sm text-gray-700"></div>
                         <div class="loading-indicator hidden mt-2 text-sm text-[#6C757D]">Gerando...</div>
                     </div>
                 </div>
@@ -462,10 +456,8 @@
                         </ul>
                         <div class="llm-button-group">
                             <button class="summarize-button px-4 py-2 bg-[#A0AEC0] text-white rounded-md hover:bg-[#6C757D] transition-colors duration-200">Resumir Seção ✨</button>
-                            <button class="interview-question-button px-4 py-2 bg-[#6C757D] text-white rounded-md hover:bg-[#495057] transition-colors duration-200">Gerar Pergunta de Entrevista ✨</button>
                         </div>
                         <div class="summary-output mt-2 text-sm text-gray-700"></div>
-                        <div class="interview-question-output mt-2 text-sm text-gray-700"></div>
                         <div class="loading-indicator hidden mt-2 text-sm text-[#6C757D]">Gerando...</div>
                     </div>
                 </div>
@@ -482,10 +474,8 @@
                         <p class="content-text"><strong>Racional de Escolha:</strong> A capacidade de um LLM de manter uma conversa coerente e relevante depende criticamente de um histórico de conversa. O limite de 20 mensagens (<code>self._history = self._history[-20:]</code>) é uma estratégia comum para gerenciar o tamanho do contexto do LLM, equilibrando coerência da conversa, custos de tokens e latência.</p>
                         <div class="llm-button-group">
                             <button class="summarize-button px-4 py-2 bg-[#A0AEC0] text-white rounded-md hover:bg-[#6C757D] transition-colors duration-200">Resumir Seção ✨</button>
-                            <button class="interview-question-button px-4 py-2 bg-[#6C757D] text-white rounded-md hover:bg-[#495057] transition-colors duration-200">Gerar Pergunta de Entrevista ✨</button>
                         </div>
                         <div class="summary-output mt-2 text-sm text-gray-700"></div>
-                        <div class="interview-question-output mt-2 text-sm text-gray-700"></div>
                         <div class="loading-indicator hidden mt-2 text-sm text-[#6C757D]">Gerando...</div>
                     </div>
                 </div>
@@ -502,10 +492,8 @@
                         <p class="content-text"><strong>Racional de Escolha:</strong> Implementa uma estratégia híbrida de NLP: utiliza regras simples (<code>if/elif</code> com palavras-chave) para intenções de alta confiança e que podem ser tratadas rapidamente (saudação, hora, agradecimentos, despedidas, e o gatilho para "pesquisa na web"). Para intenções mais complexas ou ambíguas, a requisição é delegada ao <code>LLMGenerator</code> para análise semântica mais profunda e execução de tarefas via LLM.</p>
                         <div class="llm-button-group">
                             <button class="summarize-button px-4 py-2 bg-[#A0AEC0] text-white rounded-md hover:bg-[#6C757D] transition-colors duration-200">Resumir Seção ✨</button>
-                            <button class="interview-question-button px-4 py-2 bg-[#6C757D] text-white rounded-md hover:bg-[#495057] transition-colors duration-200">Gerar Pergunta de Entrevista ✨</button>
                         </div>
                         <div class="summary-output mt-2 text-sm text-gray-700"></div>
-                        <div class="interview-question-output mt-2 text-sm text-gray-700"></div>
                         <div class="loading-indicator hidden mt-2 text-sm text-[#6C757D]">Gerando...</div>
                     </div>
                 </div>
@@ -533,10 +521,8 @@
                         </ul>
                         <div class="llm-button-group">
                             <button class="summarize-button px-4 py-2 bg-[#A0AEC0] text-white rounded-md hover:bg-[#6C757D] transition-colors duration-200">Resumir Seção ✨</button>
-                            <button class="interview-question-button px-4 py-2 bg-[#6C757D] text-white rounded-md hover:bg-[#495057] transition-colors duration-200">Gerar Pergunta de Entrevista ✨</button>
                         </div>
                         <div class="summary-output mt-2 text-sm text-gray-700"></div>
-                        <div class="interview-question-output mt-2 text-sm text-gray-700"></div>
                         <div class="loading-indicator hidden mt-2 text-sm text-[#6C757D]">Gerando...</div>
                     </div>
                 </div>
@@ -552,10 +538,8 @@
                         <p class="content-text"><strong>Racional:</strong> Segue a convenção Python para iniciar a execução de um programa, mantendo-o simples e focado apenas na inicialização do assistente.</p>
                         <div class="llm-button-group">
                             <button class="summarize-button px-4 py-2 bg-[#A0AEC0] text-white rounded-md hover:bg-[#6C757D] transition-colors duration-200">Resumir Seção ✨</button>
-                            <button class="interview-question-button px-4 py-2 bg-[#6C757D] text-white rounded-md hover:bg-[#495057] transition-colors duration-200">Gerar Pergunta de Entrevista ✨</button>
                         </div>
                         <div class="summary-output mt-2 text-sm text-gray-700"></div>
-                        <div class="interview-question-output mt-2 text-sm text-gray-700"></div>
                         <div class="loading-indicator hidden mt-2 text-sm text-[#6C757D]">Gerando...</div>
                     </div>
                 </div>
@@ -701,7 +685,7 @@ WEATHERAPI_API_KEY="YOUR_WEATHERAPI_KEY_HERE"
 
 # Google Custom Search API Key and Custom Search Engine ID
 Google Search_API_KEY="YOUR_Google Search_API_KEY_HERE"
-Google Search_CX="YOUR_Google_Search_CX_ID_HERE"
+Google Search_CX="YOUR_Google Search_CX_ID_HERE"
             </div>
             <p class="content-text mt-4">
                 <strong>Como obter estas chaves:</strong>
@@ -987,18 +971,15 @@ Google Search_CX="YOUR_Google_Search_CX_ID_HERE"
             button.addEventListener('click', async () => {
                 const accordionContent = button.closest('.accordion-content');
                 const summaryOutput = accordionContent.querySelector('.summary-output');
-                const interviewQuestionOutput = accordionContent.querySelector('.interview-question-output');
                 const loadingIndicator = accordionContent.querySelector('.loading-indicator');
                 
                 // Clear previous output and show loading
                 summaryOutput.innerHTML = '';
-                interviewQuestionOutput.innerHTML = ''; // Clear interview question too
                 loadingIndicator.classList.remove('hidden');
 
-                // Get the text to summarize, excluding the button and summary area itself
                 let contentToSummarize = '';
                 accordionContent.childNodes.forEach(node => {
-                    if (node.nodeType === Node.ELEMENT_NODE && !node.classList.contains('llm-button-group') && !node.classList.contains('summary-output') && !node.classList.contains('interview-question-output') && !node.classList.contains('loading-indicator')) {
+                    if (node.nodeType === Node.ELEMENT_NODE && !node.classList.contains('llm-button-group') && !node.classList.contains('summary-output') && !node.classList.contains('loading-indicator')) {
                         contentToSummarize += node.innerText + '\n';
                     } else if (node.nodeType === Node.TEXT_NODE) {
                         contentToSummarize += node.textContent + '\n';
@@ -1037,65 +1018,6 @@ Google Search_CX="YOUR_Google_Search_CX_ID_HERE"
                 }
             });
         });
-
-        // Gemini API integration for Generate Interview Question
-        const interviewQuestionButtons = document.querySelectorAll('.interview-question-button');
-        interviewQuestionButtons.forEach(button => {
-            button.addEventListener('click', async () => {
-                const accordionContent = button.closest('.accordion-content');
-                const summaryOutput = accordionContent.querySelector('.summary-output');
-                const interviewQuestionOutput = accordionContent.querySelector('.interview-question-output');
-                const loadingIndicator = accordionContent.querySelector('.loading-indicator');
-                
-                // Clear previous output and show loading
-                summaryOutput.innerHTML = ''; // Clear summary too
-                interviewQuestionOutput.innerHTML = '';
-                loadingIndicator.classList.remove('hidden');
-
-                let contentToAnalyze = '';
-                accordionContent.childNodes.forEach(node => {
-                    if (node.nodeType === Node.ELEMENT_NODE && !node.classList.contains('llm-button-group') && !node.classList.contains('summary-output') && !node.classList.contains('interview-question-output') && !node.classList.contains('loading-indicator')) {
-                        contentToAnalyze += node.innerText + '\n';
-                    } else if (node.nodeType === Node.TEXT_NODE) {
-                        contentToAnalyze += node.textContent + '\n';
-                    }
-                });
-
-                const prompt = `Com base no seguinte texto sobre um módulo ou arquivo do projeto Aurora, crie uma pergunta de entrevista técnica relevante que avalie a compreensão do candidato sobre este módulo. A pergunta deve ser clara e direta, em português.
-                
-                Texto do Módulo: ${contentToAnalyze.trim()}`;
-
-                let chatHistory = [];
-                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
-                const payload = { contents: chatHistory };
-                const apiKey = "";
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-
-                try {
-                    const response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                    const result = await response.json();
-
-                    if (result.candidates && result.candidates.length > 0 &&
-                        result.candidates[0].content && result.candidates[0].content.parts &&
-                        result.candidates[0].content.parts.length > 0) {
-                        const text = result.candidates[0].content.parts[0].text;
-                        interviewQuestionOutput.innerHTML = `<strong>Pergunta da Aurora:</strong> ${text}`;
-                    } else {
-                        interviewQuestionOutput.innerHTML = 'Não foi possível gerar a pergunta. Tente novamente.';
-                    }
-                } catch (error) {
-                    console.error('Erro ao chamar a API Gemini para pergunta de entrevista:', error);
-                    interviewQuestionOutput.innerHTML = 'Erro ao conectar com a IA para gerar a pergunta.';
-                } finally {
-                    loadingIndicator.classList.add('hidden');
-                }
-            });
-        });
-
 
         // Gemini API integration for Q&A about the project
         const userQuestionInput = document.getElementById('user-question');
