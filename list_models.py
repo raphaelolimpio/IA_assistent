@@ -1,13 +1,10 @@
-# list_models.py
-
 import google.generativeai as genai
 import os
 from dotenv import load_dotenv
 
-# Carrega as variáveis do arquivo .env
+
 load_dotenv()
 
-# Configura a API Gemini usando a chave do .env
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 if not GEMINI_API_KEY:
     print("ERRO: A variável de ambiente GEMINI_API_KEY não está configurada.")
@@ -19,7 +16,6 @@ genai.configure(api_key=GEMINI_API_KEY)
 print("Listando modelos disponíveis no Google Gemini API...")
 try:
     for m in genai.list_models():
-        # Filtra apenas os modelos que suportam generateContent (texto a texto)
         if 'generateContent' in m.supported_generation_methods:
             print(f"Nome do Modelo: {m.name} | Métodos Suportados: {m.supported_generation_methods}")
 except Exception as e:

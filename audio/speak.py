@@ -39,7 +39,7 @@ def falar(texto):
 
             data, samplerate = sf.read(audio_file)
             sd.play(data, samplerate)
-            sd.wait() # Espera a reprodução terminar
+            sd.wait() 
 
         except Exception as e:
             print(f"Erro ao gerar ou reproduzir áudio: {e}")
