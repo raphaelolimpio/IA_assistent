@@ -1,0 +1,17 @@
+[
+    {
+        "dialogue_id": "25336793-3b50-4dc6-b61a-00a34c6d5beb",
+        "timestamp_start_utc": "2025-05-29T13:03:16.830460+00:00",
+        "timestamp_end_utc": "2025-05-29T13:03:16.830460+00:00",
+        "participants_ids": [
+            "fbd145fc-1107-4ede-9ed4-744530f18c83"
+        ],
+        "main_type": "desconhecido",
+        "llm_summary": "Usuário se apresentou como Raphael. Trocamos saudações.",
+        "user_input_transcript": "...",
+        "aurora_response_transcript": "...",
+        "generated_facts_ids": [
+            "4e663245-c30e-4481-8652-631ce8156eb6"
+        ]
+    }
+]

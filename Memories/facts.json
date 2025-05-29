@@ -1,0 +1,12 @@
+[
+    {
+        "fact_id": "4e663245-c30e-4481-8652-631ce8156eb6",
+        "content": "O usuário principal se chama Raphael.",
+        "theme": "informacao_pessoal_usuario",
+        "source_dialogue_id": "25336793-3b50-4dc6-b61a-00a34c6d5beb",
+        "timestamp_learned_utc": "2025-05-29T13:03:16.830460+00:00",
+        "associated_people_ids": [
+            "fbd145fc-1107-4ede-9ed4-744530f18c83"
+        ]
+    }
+]

@@ -1,0 +1,16 @@
+{
+    "principal_user": [
+        {
+            "person_id": "fbd145fc-1107-4ede-9ed4-744530f18c83",
+            "main_name": "Raphael",
+            "aliases": [],
+            "first_contact_utc": "2025-05-29T13:03:16.830460+00:00",
+            "last_interaction_utc": "2025-05-29T13:03:16.830460+00:00",
+            "relevant_facts_ids": []
+        }
+    ],
+    "friends": [],
+    "classmates": [],
+    "teachers": [],
+    "others": []
+}
