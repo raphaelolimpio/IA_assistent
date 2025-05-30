@@ -18,13 +18,14 @@ class Assistant:
         load_dotenv()
 
         self.chat_history = ChatHistory()
+        self.current_dialogue_transcript = []
         self.context_manager = ContextManager()
         self.persona_manager = PersonaManager()
-        
-
+        self.llm_generator = LLMGenerator(self.chat_history) 
         self.search_tracker = UsageTracker(api_name="Google Search", limit=100, file_path="Google Search_usage.json")
 
-        self.llm_generator = LLMGenerator(self.chat_history) 
+        print("Assistente: Solicita ")
+
 
         self.respostas = {
             "saudacao": ["Olá!", "Oi, como posso ajudar?", "Bom dia!"],
@@ -35,6 +36,10 @@ class Assistant:
 
     def _adicionar_ao_historico(self, role, texto):
         self.chat_history.add_message(role, texto)
+        self.current_dialogue_transcript.append({
+            "role": role,
+            "parts": [texto]
+        })
 
     def _obter_resposta(self, intencao, texto_original):
 
@@ -73,6 +78,7 @@ class Assistant:
 
 
     def run(self):
+        self.current_dialogue_transcript = []
         while True:
             print("\nEstou ouvindo... Diga algo:")
             fala_do_usuario = ouvir_microfone()
@@ -95,5 +101,13 @@ class Assistant:
 
 
             if intencao == "despedida":
+                self._process_and_commit_memory_from_last_dialogue(self.current_dialogue_transcript)
+                self.current_dialogue_transcript = []
                 print("Assistente desligado. Até a próxima!")
                 break
+    
+    def _process_and_commit_memory_from_last_dialogue(self, full_dialogue_history):
+        print("Iniciando processamento pós-diálogo para consolidação da memória...")
+        if not full_dialogue_history:
+            print("Nenhuma conversa para processar.")
+            return
