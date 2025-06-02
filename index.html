@@ -18,29 +18,21 @@
         }
 
         /* Custom Scrollbar Styles for Webkit browsers */
-        /* For the entire scrollbar track */
+        /* For the entire scrollbar track (making it invisible globally) */
         ::-webkit-scrollbar {
-            width: 0px; /* width of the scrollbar for vertical scrollbars */
-            height: 0px;
-            background: transparent; /* height of the scrollbar for horizontal scrollbars */
+            width: 0px; /* Largura da barra de rolagem vertical */
+            height: 0px; /* Altura da barra de rolagem horizontal */
+            background: transparent; /* Torna o fundo transparente */
         }
 
-        /* For the scrollbar track itself */
+        /* For the scrollbar track itself (making it invisible) */
         ::-webkit-scrollbar-track {
-            background: #1f2937; /* Darker background for the track */
-            border-radius: 10px; /* Rounded corners for the track */
+            background: transparent; /* Garante que o trilho seja invisível */
         }
 
-        /* For the scrollbar thumb */
+        /* For the scrollbar thumb (making it invisible) */
         ::-webkit-scrollbar-thumb {
-            background-color: #4b5563; /* Greyish color for the thumb */
-            border-radius: 10px; /* Rounded corners for the thumb */
-            border: 3px solid #1f2937; /* Padding around the thumb */
-        }
-
-        /* On hover, make the thumb slightly lighter */
-        ::-webkit-scrollbar-thumb:hover {
-            background-color: #6b7280;
+            background-color: transparent; /* Garante que o "botão" seja invisível */
         }
 
         /* Styles for sidebar icons, making them lighter */
@@ -315,8 +307,7 @@
                 <h2 class="text-3xl font-bold text-sky-400 mb-2">Estrutura do Projeto e Racional de Design</h2> 
                 <p class="text-zinc-400 mb-8 break-words">A organização do Projeto Aurora foi cuidadosamente pensada para promover a <strong>separação de preocupações (Separation of Concerns)</strong>, agrupando funcionalidades relacionadas em módulos lógicos. Isso garante que cada parte do sistema tenha um propósito claro e bem definido, facilitando o desenvolvimento, a manutenção e futuras expansões. Pense em cada módulo como uma região especializada do cérebro da Aurora, trabalhando em conjunto para sua inteligência.</p>
                 
-                <div class="relative bg-zinc-800 p-6 rounded-lg border border-zinc-700 shadow-xl">
-                    <pre class="text-xs text-zinc-100 break-words"><code>
+                <div class="relative bg-zinc-800 p-6 rounded-lg border border-zinc-700 shadow-xl overflow-x-auto"> <pre class="text-xs text-zinc-100 break-words"><code>
 .
 ├── audio/                    # Camada de Interface: Entrada/Saída de áudio (STT/TTS)
 │   └── speak.py              # Responsável por converter voz em texto e texto em voz.
@@ -467,12 +458,12 @@
                     description: 'A camada de abstração e interface para a API Gemini (Google Generative AI). É o componente que interage diretamente com o LLM e orquestra a execução de ferramentas.',
                     keyFile: 'generator.py',
                     responsibilities: [
-                        '<strong>Configuração de API</strong>: Carrega a `GEMINI_API_KEY` do `.env`, garantindo que as credenciais não estejam hardcoded.',
-                        '<strong>Inicialização do Modelo</strong>: Instancia `genai.GenerativeModel(\'models/gemini-1.5-flash-latest\')`. A escolha do modelo (`flash-latest`) indica um foco em latência e custo-benefício.',
-                        '<strong>Tool Calling (Chamada de Ferramentas)</strong>: Este é um dos <strong>pontos mais críticos e avançados</strong> da arquitetura:<ol class="list-decimal list-inside ml-4 mt-1"><li><strong>Registro de Ferramentas</strong>: O modelo é inicializado com uma lista de funções Python (`tools=[get_weather_data, search_web]`). O SDK do Gemini automaticamente converte essas funções em descrições de ferramentas que o LLM pode entender.</li><li><strong>Detecção de `function_call`</strong>: Quando o LLM, ao processar a entrada do usuário e o histórico, determina que uma ferramenta é necessária para responder à consulta, ele retorna uma `function_call` em vez de uma resposta textual direta. Esta `function_call` inclui o nome da ferramenta e os argumentos inferidos pelo LLM.</li><li><strong>Execução da Ferramenta</strong>: O `LLMGenerator` intercepta essa `function_call`, extrai o nome da ferramenta (`tool_call.name`) e seus argumentos (`tool_call.args`). Ele então executa a função Python correspondente (e.g., `get_weather_data(location=...)`).</li><li><strong>Injeção do Resultado</strong>: O resultado da execução da ferramenta (`tool_result`) é então enviado de volta ao LLM como parte da conversa (`genai.protos.Part(function_response=...)`). Isso permite que o LLM use o resultado da ferramenta para gerar uma resposta final contextually relevante e natural para o usuário.</li></ol>',
-                        '<strong>Gerenciamento de Histórico</strong>: `chat_session = self.registered_tools_model.start_chat(history=self.chat_history_instance.get_history())` garante que o contexto conversacional completo (limitado pela janela de `ChatHistory`) seja mantido com o LLM, permitindo diálogos multi-turno.',
-                        '<strong>Injeção de Persona</strong>: O `persona_prompt` do `PersonaManager` é concatenado ao `user_text` para formar o `full_prompt`, influenciando o estilo e o tom das respostas do LLM.',
-                        '<strong>Tratamento de Erros</strong>: Inclui blocos `try-except` abrangentes para capturar erros na chamada da API Gemini ou no processamento da resposta, garantindo que a aplicação não trave e forneça uma mensagem de erro amigável ao usuário. Em caso de erro grave, o histórico do chat é limpo para evitar propagação de estado inconsistente.',
+                        '<strong>Configuração de API</strong>: Carrega a `GEMINI_API_KEY` do `.env`.',
+                        '<strong>Inicialização do Modelo</strong>: Instancia `genai.GenerativeModel(\'models/gemini-1.5-flash-latest\')`.',
+                        '<strong>Tool Calling (Chamada de Ferramentas)</strong>: Este é um dos <strong>pontos mais críticos e avançados</strong> da arquitetura:<ol class="list-decimal list-inside ml-4 mt-1"><li><strong>Registro de Ferramentas</strong>: O modelo é inicializado com uma lista de funções Python (`tools=[get_weather_data, search_web]`).</li><li><strong>Detecção de `function_call`</strong>: Quando o LLM retorna uma `function_call` em vez de uma resposta textual direta.</li><li><strong>Execução da Ferramenta</strong>: O `LLMGenerator` intercepta essa `function_call`, extrai o nome da ferramenta e seus argumentos, e executa a função Python correspondente.</li><li><strong>Injeção do Resultado</strong>: O resultado da execução da ferramenta é enviado de volta ao LLM para gerar uma resposta final.</li></ol>',
+                        '<strong>Gerenciamento de Histórico</strong>: `chat_session = self.registered_tools_model.start_chat(history=self.chat_history_instance.get_history())` garante o contexto conversacional completo.',
+                        '<strong>Injeção de Persona</strong>: O `persona_prompt` do `PersonaManager` é concatenado ao `user_text` para influenciar o estilo e o tom das respostas do LLM.',
+                        '<strong>Tratamento de Erros</strong>: Inclui blocos `try-except` abrangentes para capturar erros na chamada da API Gemini ou no processamento da resposta.',
                     ]
                 },
                 logic_memory: {
@@ -480,14 +471,14 @@
                     description: 'Este subsistema é o coração da capacidade da Aurora de "aprender" e manter o estado através das sessões. É um exemplo de <strong>Memória de Curto e Médio Prazo</strong> (histórico de chat) e <strong>Memória de Longo Prazo</strong> (fatos, pessoas, diálogos).',
                     keyFile: 'general_memory.py, chat_history.py, add_dialogue_entry.py, add_learned_fact.py, add_person.py, consolidate_memory.py, dialogue_processor.py, knowledge_loader.py',
                     responsibilities: [
-                        '<strong>`general_memory.py`</strong>: Fornece utilitários de baixo nível para gerenciamento de arquivos JSON e geração de IDs únicos.<ul><li><strong>Constantes</strong>: `MEMORIES_DIR`, `PEOPLE_FILE`, `FACTS_FILE`, `DIALOGUES_FILE` definem a estrutura do armazenamento. `os.makedirs(MEMORIES_DIR, exist_ok=True)` garante que o diretório de persistência exista.</li><li><strong>`generate_uuid()`</strong>: Utiliza `uuid.uuid4()` para gerar <strong>Universally Unique Identifiers (UUIDs)</strong>. Isso é crucial para garantir que cada entrada de pessoa, fato ou diálogo tenha um identificador único e não colida, mesmo em um ambiente distribuído.</li><li><strong>`load_json_file(file_path, default_data_type)`</strong>: Lida com o carregamento de arquivos JSON. Inclui tratamento de `FileNotFoundError`, `json.JSONDecodeError` e arquivos vazios, prevenindo falhas na inicialização do sistema.</li><li><strong>`save_json_file(file_path, data)`</strong>: Salva dados em JSON com `indent=4` para legibilidade e `ensure_ascii=False` para suportar caracteres Unicode.</li></ul>',
-                        '<strong>`chat_history.py`</strong>: Gerencia o histórico de mensagens trocadas com o LLM dentro de uma <strong>sessão conversacional ativa</strong>.<ul><li><strong>`add_message(role, text)`</strong>: Adiciona uma nova mensagem ao histórico.</li><li><strong>Estratégia de Limitação</strong>: `self._history = self._history[-20:]` é uma estratégia de <strong>janela deslizante (sliding window)</strong> para o histórico, vital para controle de custo, latência e relevância contextual.</li></ul>',
-                        '<strong>`add_dialogue_entry.py`</strong>: Adiciona um registro de um diálogo completo ao arquivo `dialogues.json`.<ul><li>Verifica a presença de `dialogue_id` para garantir a integridade dos dados.</li><li>Implementa uma verificação para evitar a duplicação de entradas de diálogo, garantindo a <strong>idempotência</strong> da operação.</li></ul>',
-                        '<strong>`add_learned_fact.py`</strong>: Persiste fatos importantes extraídos da conversa no arquivo `facts.json`.<ul><li>Verifica a presença de `fact_id`.</li><li><strong>Lógica de Atualização</strong>: Permite que fatos existentes sejam <strong>atualizados</strong> se um `fact_id` correspondente for encontrado, crucial para a evolução do conhecimento da assistente.</li></ul>',
-                        '<strong>`add_person.py`</strong>: Gerencia informações sobre indivíduos (usuários, amigos, etc.) no arquivo `people.json`.<ul><li>Permite categorizar pessoas (e.g., `principal_user`, `friends`).</li><li><strong>Lógica de Atualização</strong>: Verifica se a pessoa já existe pelo `person_id` e atualiza seus dados, ou adiciona uma nova entrada se não encontrada.</li></ul>',
-                        '<strong>`consolidate_memory.py`</strong>: Atua como a <strong>camada de serviço de consolidação de memória de alto nível</strong>. Ele orquestra a persistência de informações pós-diálogo, garantindo que os dados sejam corretamente armazenados e interligados.<ul><li><strong>Gerenciamento do Usuário Principal</strong>: Contém a lógica para identificar e registrar o usuário principal.</li><li><strong>Orquestração de Persistência</strong>: Delega a chamada para `add_person`, `add_learned_fact` e `add_dialogue_entry`.</li><li><strong>Associação de Dados</strong>: Garante que os fatos aprendidos sejam associados ao diálogo de origem e aos participantes, criando um grafo de conhecimento implícito.</li></ul>',
-                        '<strong>`dialogue_processor.py`</strong>: Atua como um <strong>processador de pós-diálogo</strong>, extraindo informações valiosas do histórico de uma conversa para serem persistidas na memória de longo prazo.<ul><li><strong>`_format_transcript_for_llm()`</strong>: Função auxiliar para formatar o histórico de mensagens em um formato legível pelo LLM.</li><li><strong>Sumarização de Diálogo</strong>: Envia a transcrição completa do diálogo ao LLM com um prompt específico para geração de resumos.</li><li><strong>Extração de Fatos</strong>: Utiliza o LLM com um prompt estruturado para extrair fatos importantes em formato JSON, um exemplo de <strong>Extração de Informação Estruturada</strong> usando um LLM.</li><li><strong>Delegação</strong>: Delega a persistência final à função `consolidate_memory`.</li></ul>',
-                        '<strong>`knowledge_loader.py`</strong>: Carrega todas as bases de conhecimento (memórias) persistidas ao iniciar o sistema, restaurando o estado da assistente.<ul><li><strong>`load_all_knowledge()`</strong>: Orquestra o carregamento dos arquivos `people.json` e `facts.json`.</li><li><strong>`_extract_principal_user()`</strong>: Função auxiliar para carregar rapidamente as informações do usuário principal.</li></ul>',
+                        '<strong>`general_memory.py`</strong>: Fornece utilitários de baixo nível para gerenciamento de arquivos JSON e geração de IDs únicos.',
+                        '<strong>`chat_history.py`</strong>: Gerencia o histórico de mensagens trocadas com o LLM dentro de uma <strong>sessão conversacional ativa</strong>.',
+                        '<strong>`add_dialogue_entry.py`</strong>: Adiciona um registro de um diálogo completo ao arquivo `dialogues.json`.',
+                        '<strong>`add_learned_fact.py`</strong>: Persiste fatos importantes extraídos da conversa no arquivo `facts.json`.',
+                        '<strong>`add_person.py`</strong>: Gerencia informações sobre indivíduos (usuários, amigos, etc.) no arquivo `people.json`.',
+                        '<strong>`consolidate_memory.py`</strong>: Atua como a <strong>camada de serviço de consolidação de memória de alto nível</strong>.',
+                        '<strong>`dialogue_processor.py`</strong>: Atua como um <strong>processador de pós-diálogo</strong>, extraindo informações valiosas do histórico de uma conversa para serem persistidas.',
+                        '<strong>`knowledge_loader.py`</strong>: Carrega todas as bases de conhecimento (memórias) persistidas ao iniciar o sistema, restaurando o estado da assistente.',
                     ]
                 },
                 conscience: {
@@ -495,9 +486,9 @@
                     description: 'Gerencia o contexto dinâmico, ambiental e atributos da assistente, como a persona e limites de uso.',
                     keyFile: 'context_manager.py, persona_manager.py, usage_tracker.py',
                     responsibilities: [
-                        '<strong>`context_manager.py`</strong>: Gerencia o contexto dinâmico e ambiental da assistente, como a hora atual e a localização geográfica.<ul><li><strong>`get_current_time()`</strong>: Retorna a hora formatada.</li><li><strong>`get_default_location()`</strong>: Demonstra a integração com uma <strong>API externa (IP-API.com)</strong> para obter dados de localização em tempo real com base no IP do servidor. Inclui um mecanismo de <strong>cache com expiração</strong> para reduzir chamadas de API e melhorar a performance.</li><li><strong>Robustez</strong>: Implementa `try-except` para `requests.exceptions.RequestException` (falhas de rede) e outros `Exception`s, garantindo que o sistema use uma localização padrão em caso de falha na API.</li></ul>',
-                        '<strong>`persona_manager.py`</strong>: Encapsula a definição da <strong>personalidade (persona)</strong> da assistente virtual.<ul><li><strong>`get_persona_prompt()`</strong>: Fornece uma string de prompt que descreve a personalidade da Aurora ("entusiasmada, criativa e um pouco brincalhona"). Esta string é injetada nas requisições ao LLM, um exemplo de <strong>Prompt Engineering</strong> para controlar o estilo e o tom das respostas do LLM.</li></ul>',
-                        '<strong>`usage_tracker.py`</strong>: Implementa um <strong>mecanismo de rate limiting</strong> simples para APIs externas, controlando o consumo diário para evitar exceder cotas e incorrer em custos.<ul><li><strong>Persistência</strong>: O contador de uso diário é persistido em um arquivo JSON (`usage_data.json`).</li><li><strong>`_check_and_reset_daily()`</strong>: Garante que o contador seja <strong>resetado automaticamente a cada novo dia</strong>.</li><li><strong>Métodos de Controle</strong>: Fornece métodos como `increment_usage()`, `get_current_usage()`, `is_within_limit()` e `get_remaining_uses()`, permitindo que a aplicação consulte e gerencie o consumo de APIs de forma programática.</li></ul>',
+                        '<strong>`context_manager.py`</strong>: Gerencia o contexto dinâmico e ambiental da assistente, como a hora atual e a localização geográfica.',
+                        '<strong>`persona_manager.py`</strong>: Encapsula a definição da <strong>personalidade (persona)</strong> da assistente virtual.',
+                        '<strong>`usage_tracker.py`</strong>: Implementa um <strong>mecanismo de rate limiting</strong> simples para APIs externas, controlando o consumo diário.',
                     ]
                 },
                 tools: {
@@ -505,8 +496,8 @@
                     description: 'Esses módulos atuam como <strong>adaptadores ou wrappers</strong> para APIs externas, seguindo o princípio da <strong>Single Responsibility Principle</strong> (SRP) e <strong>Dependency Inversion</strong> (o LLM depende de uma interface de ferramenta, não da implementação específica da API).',
                     keyFile: 'weather_tool.py, web_search_tool.py',
                     responsibilities: [
-                        '<strong>`weather_tool.py`</strong>: Interage com a WeatherAPI.com para obter dados de clima.<ul><li>Carrega a `WEATHERAPI_API_KEY` do `.env`.</li><li>Realiza uma requisição HTTP GET para a API.</li><li><strong>Tratamento de Erros de API</strong>: `response.raise_for_status()` levanta exceções para códigos de status HTTP 4xx/5xx. Além disso, verifica a presença de `error` na resposta JSON da API.</li><li><strong>Parsing de JSON</strong>: Acessa os dados da resposta JSON. `KeyError` é tratado para proteger contra mudanças inesperadas no formato da resposta da API.</li><li>Formata a resposta de forma legível para o LLM.</li></ul>',
-                        '<strong>`web_search_tool.py`</strong>: Realiza pesquisas na web usando a Google Custom Search API.<ul><li>Carrega `Google Search_API_KEY` e `Google Search_CX` (Custom Search Engine ID) do `.env`.</li><li>Realiza uma requisição HTTP GET para a Google Custom Search API.</li><li><strong>Tratamento de Erros de API</strong>: Similar a `weather_tool.py`, inclui `response.raise_for_status()` e verifica se há itens nos resultados.</li><li><strong>Formatação de Resultados</strong>: Extrai `title`, `link` e `snippet` de cada item e os formata em uma string concisa, otimizada para ser consumida e interpretada pelo LLM.</li></ul>',
+                        '<strong>`weather_tool.py`</strong>: Interage com a WeatherAPI.com para obter dados de clima.',
+                        '<strong>`web_search_tool.py`</strong>: Realiza pesquisas na web usando a Google Custom Search API.',
                     ]
                 },
                 audio: {
@@ -514,8 +505,8 @@
                     description: 'Fornece as capacidades de <strong>Speech-to-Text (STT)</strong> e <strong>Text-to-Speech (TTS)</strong>, atuando como a camada de interface de áudio do sistema.',
                     keyFile: 'speak.py',
                     responsibilities: [
-                        '<strong>`ouvir_microfone()` (STT)</strong>: Utiliza a biblioteca `SpeechRecognition` para interagir com o microfone.<ul><li>`r.adjust_for_ambient_noise(source, duration=1.0)`: Calibra o microfone para o nível de ruído ambiente.</li><li>`r.listen(source, timeout=5, phrase_time_limit=4)`: Captura o áudio com limites de tempo.</li><li>`r.recognize_google(audio, language="pt-BR")`: Envia o áudio para a API de reconhecimento de fala do Google.</li><li><strong>Tratamento de Exceções</strong>: Implementa `try-except` para `sr.WaitTimeoutError`, `sr.UnknownValueError` e `sr.RequestError`.</li></ul>',
-                        '<strong>`falar(texto)` (TTS)</strong>: Utiliza a biblioteca `gTTS` (Google Text-to-Speech) para converter texto em fala.<ul><li>O áudio é salvo temporariamente como `temp_audio.mp3`.</li><li>`soundfile` e `sounddevice` são usados para carregar e reproduzir o arquivo de áudio. `sd.wait()` bloqueia a execução.</li><li><strong>Limpeza de Recursos</strong>: O bloco `finally` garante que o arquivo temporário `temp_audio.mp3` seja removido.</li></ul>',
+                        '<strong>`ouvir_microfone()` (STT)</strong>: Utiliza a biblioteca `SpeechRecognition` para interagir com o microfone.',
+                        '<strong>`falar(texto)` (TTS)</strong>: Utiliza a biblioteca `gTTS` para converter texto em fala.',
                     ]
                 },
                 nlp: {
@@ -523,8 +514,7 @@
                     description: 'Realiza uma <strong>classificação de intenção (Intent Classification)</strong> inicial e básica da entrada do usuário. Atua como uma camada inicial de roteamento.',
                     keyFile: 'processing.py',
                     responsibilities: [
-                        '<strong>`processar_texto(texto)`</strong>: Implementa uma abordagem de <strong>classificação de intenção baseada em regras (Rule-Based Intent Classification)</strong>. Ele verifica a presença de palavras-chave específicas (`"olá"`, `"horas"`, `"clima"`, etc.) para inferir a intenção do usuário.',
-                        '<strong>Limitações</strong>: Esta é uma solução simplista. Para um sistema de produção, seria substituída por um modelo de <strong>NLU (Natural Language Understanding)</strong> mais sofisticado, treinado em grandes volumes de dados para identificar intenções e extrair entidades (e.g., usando frameworks como Rasa, spaCy, ou serviços de NLU baseados em ML). A abordagem atual é útil para prototipagem rápida e demonstração de conceitos.',
+                        '<strong>`processar_texto(texto)`</strong>: Implementa uma abordagem de <strong>classificação de intenção baseada em regras (Rule-Based Intent Classification)</strong>.',
                     ]
                 }
             };
@@ -767,7 +757,8 @@
                     currentFlowStep++;
                     renderFlowStep(currentFlowStep);
                 }
-            });
+            }
+            );
 
             // Function to render memory content based on tab selection
             function renderMemoryContent(memoryType) {
@@ -779,8 +770,7 @@
                                        <div class="space-y-3">`;
 
                 data.data.forEach(item => {
-                    contentHtml += `<div class="bg-zinc-700 p-3 rounded-md border border-zinc-600">
-                                            <pre class="text-xs text-zinc-300 break-words"><code>${JSON.stringify(item, null, 2)}</code></pre>
+                    contentHtml += `<div class="bg-zinc-700 p-3 rounded-md border border-zinc-600 overflow-x-auto"> <pre class="text-xs text-zinc-300 break-words"><code>${JSON.stringify(item, null, 2)}</code></pre>
                                         </div>`;
                 });
 
@@ -859,4 +849,4 @@
         });
     </script>
 </body>
-</html>
+</ht
