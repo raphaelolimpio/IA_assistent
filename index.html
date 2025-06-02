@@ -17,20 +17,17 @@
             color: #e5e7eb; /* Light text */
         }
 
-        /* Custom Scrollbar Styles for Webkit browsers */
-        /* For the entire scrollbar track (making it invisible globally) */
+        /* Custom Scrollbar Styles for Webkit browsers (making it invisible globally) */
         ::-webkit-scrollbar {
             width: 0px; /* Largura da barra de rolagem vertical */
             height: 0px; /* Altura da barra de rolagem horizontal */
             background: transparent; /* Torna o fundo transparente */
         }
 
-        /* For the scrollbar track itself (making it invisible) */
         ::-webkit-scrollbar-track {
             background: transparent; /* Garante que o trilho seja invisível */
         }
 
-        /* For the scrollbar thumb (making it invisible) */
         ::-webkit-scrollbar-thumb {
             background-color: transparent; /* Garante que o "botão" seja invisível */
         }
@@ -225,6 +222,13 @@
             fill: #00bcd4; /* Glowing text color */
             pointer-events: none; /* Prevent text from blocking click on group */
             font-weight: 600; /* Semi-bold text */
+        }
+
+        /* Specific styles for pre tags to handle long lines gracefully */
+        pre {
+            white-space: pre-wrap; /* Allows lines to wrap */
+            word-break: break-all; /* Forces breaking of long words */
+            /* The 'text-xs' and 'text-zinc-100' classes are already applied in HTML */
         }
     </style>
 </head>
@@ -849,4 +853,4 @@
         });
     </script>
 </body>
-</ht
+</html>
