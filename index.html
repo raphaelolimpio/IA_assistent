@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -854,3 +855,861 @@
     </script>
 </body>
 </html>
+=======
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfólio Interativo: Projeto Aurora - Sua Assistente Inteligente</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Base styles for the body, ensuring Inter font and dark background/light text */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827; /* Dark background */
+            color: #e5e7eb; /* Light text */
+        }
+
+        /* Custom Scrollbar Styles for Webkit browsers (making it invisible globally) */
+        ::-webkit-scrollbar {
+            width: 0px; /* Largura da barra de rolagem vertical */
+            height: 0px; /* Altura da barra de rolagem horizontal */
+            background: transparent; /* Torna o fundo transparente */
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent; /* Garante que o trilho seja invisível */
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: transparent; /* Garante que o "botão" seja invisível */
+        }
+
+        /* Styles for sidebar icons, making them lighter */
+        .sidebar-icon {
+            width: 24px;
+            height: 24px;
+            fill: none;
+            stroke: #9ca3af; /* Lighter icon color */
+        }
+        /* Active state for sidebar icons, making them glow teal */
+        .nav-link.active .sidebar-icon {
+            stroke: #6ee7b7; /* Glowing teal for active icon */
+        }
+        /* Hiding content sections by default */
+        .content-section {
+            display: none;
+        }
+        /* Showing active content section */
+        .content-section.active {
+            display: block;
+        }
+        /* Styles for diagram boxes, with hover and selected states */
+        .diagram-box {
+            transition: all 0.3s ease-in-out; /* Smoother transition */
+            cursor: pointer;
+            background-color: #1f2937; /* Darker card background */
+            border-color: #374151;
+            color: #d1d5db;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2); /* Subtle initial shadow */
+        }
+        .diagram-box:hover {
+            transform: translateY(-5px) scale(1.02); /* More pronounced lift and scale */
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5); /* Stronger, wider shadow on hover */
+        }
+        .diagram-box.selected {
+            box-shadow: 0 0 0 4px #6ee7b7, 0 12px 30px rgba(0,0,0,0.7); /* Thicker teal glow with deeper, larger shadow */
+            background-color: #374151;
+            color: #fff;
+            transform: scale(1.06); /* Slightly larger scale */
+            filter: drop-shadow(0 0 8px rgba(110, 231, 183, 0.7)); /* Stronger glow filter */
+        }
+        /* Styles for flow steps, with active state */
+        .flow-step {
+            transition: all 0.3s ease-in-out;
+            opacity: 0.7;
+            border-left-width: 4px;
+            border-left-color: transparent;
+            background-color: #1f2937;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2); /* Subtle shadow for steps */
+        }
+        .flow-step:hover:not(.active) { /* Added hover for inactive steps */
+            transform: translateY(-3px); /* Slight lift on hover */
+            box-shadow: 0 6px 16px rgba(0,0,0,0.35); /* More visible shadow on hover */
+            opacity: 0.9; /* Slightly more opaque on hover */
+        }
+        .flow-step.active {
+            opacity: 1;
+            transform: scale(1.02); /* Slightly more noticeable scale */
+            background-color: #374151;
+            border-left-color: #6ee7b7; /* Glowing teal border */
+            color: #fff;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.4); /* Stronger shadow */
+        }
+        /* Styles for memory tabs, with active state */
+        .memory-tab {
+            color: #9ca3af;
+            border-bottom-color: transparent;
+            transition: all 0.2s ease-in-out; /* Smooth transition for tabs */
+        }
+        .memory-tab.active {
+            border-bottom-color: #6ee7b7;
+            color: #6ee7b7;
+            font-weight: 600;
+            transform: translateY(0px); /* Ensure no unwanted transform */
+        }
+        .memory-tab:hover:not(.active) {
+            color: #e5e7eb; /* Lighter text on hover for inactive tabs */
+            transform: translateY(-2px); /* Subtle lift on hover */
+        }
+
+        /* Styles for navigation links, with hover and active states */
+        a.nav-link {
+            color: #9ca3af;
+            transition: all 0.2s ease-in-out; /* Smooth transition for nav links */
+        }
+        a.nav-link:hover {
+            background-color: #1d283a;
+            color: #fff;
+            transform: translateX(3px); /* Slight slide on hover */
+        }
+        a.nav-link.active {
+            background-color: #1d283a;
+            color: #6ee7b7;
+            box-shadow: inset 3px 0 0 0 #6ee7b7; /* Subtle glowing border on active */
+        }
+        /* Styles for roadmap item content (expandable sections) */
+        .roadmap-item-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-in-out, padding 0.4s ease-in-out; /* Smoother expansion */
+            background-color: #1f2937;
+            border: 1px solid #374151;
+            padding: 0 1.5rem; /* Adjust padding for better look */
+            margin-top: 0.5rem;
+            border-radius: 0.375rem;
+        }
+        .roadmap-item-content.expanded {
+            max-height: 1000px; /* Increased max-height for longer content */
+            padding: 1rem 1.5rem; /* Apply padding when expanded */
+        }
+        /* Global overrides for Tailwind classes to match the dark theme */
+        .bg-white {
+            background-color: #1f2937; /* Dark background for cards/sections */
+        }
+        .border-zinc-200 {
+            border-color: #374151;
+        }
+        .text-zinc-100 {
+            color: #ffffff; /* Light text */
+        }
+        .text-zinc-900 {
+            color: #e5e7eb; /* Light text */
+        }
+        .text-zinc-600, .text-zinc-500, .text-zinc-700, .text-zinc-800 {
+            color: #d1d5db; /* Light text */
+        }
+        .font-bold, .font-semibold {
+            color: #e5e7eb; /* Light text */
+        }
+        .text-indigo-700 {
+            color: #818cf8; /* A softer purple */
+        }
+        .bg-indigo-600 {
+            background-color: #6366f1;
+        }
+        .hover\:bg-indigo-700:hover {
+            background-color: #4f46e5;
+        }
+        .bg-zinc-200 { /* This was used for buttons, changed to dark theme equivalent */
+            background-color: #374151;
+            color: #e5e7eb;
+        }
+        .hover\:bg-zinc-300:hover { /* This was used for buttons, changed to dark theme equivalent */
+            background-color: #4b5563;
+        }
+
+        /* Custom SVG for brain background (if used) */
+        .brain-svg-bg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%; /* Adjust size as needed */
+            height: 80%; /* Adjust size as needed */
+            opacity: 0.1; /* Subtle opacity */
+            z-index: 0; /* Behind content */
+            stroke: #4dd0e1; /* Teal glow color */
+            stroke-width: 1;
+            fill: none;
+        }
+
+        /* Styles for the interactive brain components (if used) */
+        .brain-component-svg {
+            transition: all 0.3s ease-in-out;
+            transform-origin: center; /* Important for scaling */
+            fill: rgba(0, 188, 212, 0.05); /* Very subtle glowing fill */
+            stroke: #00bcd4; /* Glowing outline */
+            stroke-width: 0.5;
+            cursor: pointer;
+            filter: drop-shadow(0 0 2px rgba(0, 188, 212, 0.4)); /* Subtle initial glow */
+        }
+        .brain-component-svg:hover {
+            transform: scale(1.05);
+            fill: rgba(0, 188, 212, 0.15); /* More visible fill on hover */
+            filter: drop-shadow(0 0 10px rgba(0, 188, 212, 0.8)); /* Stronger glowing shadow on hover */
+        }
+        .brain-component-svg.selected {
+            fill: rgba(0, 188, 212, 0.3); /* More visible fill when selected */
+            stroke: #6ee7b7; /* Teal glow */
+            stroke-width: 2;
+            filter: drop-shadow(0 0 15px #6ee7b7); /* Stronger glow when selected */
+            transform: scale(1.08); /* Slightly larger when selected */
+        }
+        .brain-component-svg.selected text {
+            fill: #fff; /* White text when selected */
+        }
+        .brain-component-svg text {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem; /* text-xs */
+            fill: #00bcd4; /* Glowing text color */
+            pointer-events: none; /* Prevent text from blocking click on group */
+            font-weight: 600; /* Semi-bold text */
+        }
+
+        /* Specific styles for pre tags to handle long lines gracefully */
+        pre {
+            white-space: pre-wrap; /* Allows lines to wrap */
+            word-break: break-all; /* Forces breaking of long words */
+            /* The 'text-xs' and 'text-zinc-100' classes are already applied in HTML */
+        }
+    </style>
+</head>
+<body class="bg-zinc-900 text-zinc-100">
+    <div class="flex h-screen">
+        <aside class="w-20 lg:w-64 bg-zinc-800 border-r border-zinc-700 flex flex-col shadow-lg">
+            <div class="h-16 flex items-center justify-center lg:justify-start lg:px-6 border-b border-zinc-700">
+                <div class="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center">
+                    <span class="text-white font-bold text-lg">A</span>
+                </div>
+                <h1 class="ml-3 text-xl font-bold text-zinc-100 hidden lg:block">Projeto Aurora</h1>
+            </div>
+            <nav class="flex-1 px-3 lg:px-4 py-4 space-y-2">
+                <a href="#" data-view="overview" class="nav-link flex items-center p-3 rounded-lg text-zinc-400 hover:bg-zinc-700 active">
+                    <svg class="sidebar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                    <span class="ml-4 font-medium hidden lg:block">Visão Geral</span>
+                </a>
+                <a href="#" data-view="structure" class="nav-link flex items-center p-3 rounded-lg text-zinc-400 hover:bg-zinc-700">
+                    <svg class="sidebar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>
+                    <span class="ml-4 font-medium hidden lg:block">Estrutura do Projeto</span>
+                </a>
+                <a href="#" data-view="howitworks" class="nav-link flex items-center p-3 rounded-lg text-zinc-400 hover:bg-zinc-700">
+                    <svg class="sidebar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                    <span class="ml-4 font-medium hidden lg:block">Como Funciona</span>
+                </a>
+                <a href="#" data-view="flow" class="nav-link flex items-center p-3 rounded-lg text-zinc-400 hover:bg-zinc-700">
+                    <svg class="sidebar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    <span class="ml-4 font-medium hidden lg:block">Fluxo de Execução</span>
+                </a>
+                <a href="#" data-view="memory" class="nav-link flex items-center p-3 rounded-lg text-zinc-400 hover:bg-zinc-700">
+                    <svg class="sidebar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4M4 7v10M12 21v-8M20 7v10"></path></svg>
+                    <span class="ml-4 font-medium hidden lg:block">A Memória da Aurora</span>
+                </a>
+                <a href="#" data-view="versioning" class="nav-link flex items-center p-3 rounded-lg text-zinc-400 hover:bg-zinc-700">
+                    <svg class="sidebar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    <span class="ml-4 font-medium hidden lg:block">Versionamento</span>
+                </a>
+                <a href="#" data-view="roadmap" class="nav-link flex items-center p-3 rounded-lg text-zinc-400 hover:bg-zinc-700">
+                    <svg class="sidebar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span class="ml-4 font-medium hidden lg:block">O Futuro da Aurora</span>
+                </a>
+            </nav>
+        </aside>
+
+        <main class="flex-1 p-6 lg:p-10 overflow-y-auto bg-zinc-900">
+            <section id="overview" class="content-section active">
+                <h2 class="text-3xl font-bold text-sky-400 mb-2">Visão Geral do Projeto Aurora</h2>
+                <p class="text-zinc-400 mb-8">Bem-vindo ao Projeto Aurora! Este é um sistema de assistente virtual inteligente e conversacional, projetado com uma arquitetura flexível para demonstrar como a inteligência artificial pode interagir de forma dinâmica e aprender com o mundo real. A Aurora é capaz de entender o que você diz, aprender com as conversas e usar ferramentas externas para te ajudar no dia a dia, como checar o clima ou pesquisar na internet. Nosso objetivo principal é apresentar um sistema robusto, fácil de expandir e manter, sempre buscando clareza e usabilidade, tanto para usuários quanto para desenvolvedores.</p>
+                
+                <h3 class="text-2xl font-bold text-sky-400 mb-4">Princípios Técnicos Fundamentais</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-zinc-800 p-6 rounded-lg border border-zinc-700 shadow-xl">
+                        <h4 class="font-bold text-lg mb-2 text-teal-400">Modularidade (Separation of Concerns)</h4>
+                        <p class="text-zinc-400 text-sm break-words">Cada diretório e, idealmente, cada arquivo Python encapsula uma responsabilidade única. Isso minimiza o acoplamento entre os componentes, facilitando o desenvolvimento paralelo, a depuração e a substituição de módulos.</p>
+                    </div>
+                    <div class="bg-zinc-800 p-6 rounded-lg border border-zinc-700 shadow-xl">
+                        <h4 class="font-bold text-lg mb-2 text-teal-400">Extensibilidade (Open/Closed Principle)</h4>
+                        <p class="text-zinc-400 text-sm break-words">O sistema é projetado para permitir a adição de novas ferramentas, intenções de diálogo ou estratégias de memória com o mínimo de modificações no código existente, principalmente no `Assistant` e `LLMGenerator`.</p>
+                    </div>
+                    <div class="bg-zinc-800 p-6 rounded-lg border border-zinc-700 shadow-xl">
+                        <h4 class="font-bold text-lg mb-2 text-teal-400">Persistência de Dados</h4>
+                        <p class="text-zinc-400 text-sm break-words">A capacidade de "aprender" e reter informações sobre o usuário e interações passadas é um pilar. Embora a implementação inicial use arquivos JSON, a arquitetura é agnóstica a essa escolha, permitindo uma futura migração para soluções de banco de dados.</p>
+                    </div>
+                    <div class="bg-zinc-800 p-6 rounded-lg border border-zinc-700 shadow-xl">
+                        <h4 class="font-bold text-lg mb-2 text-teal-400">Integração de LLM (AI-Powered Core)</h4>
+                        <p class="text-zinc-400 text-sm break-words">O LLM é o cérebro do sistema, responsável pela compreensão avançada da linguagem natural (NLU), geração de linguagem natural (NLG) e orquestração inteligente de ferramentas para responder a consultas complexas.</p>
+                    </div>
+                    <div class="bg-zinc-800 p-6 rounded-lg border border-zinc-700 shadow-xl">
+                        <h4 class="font-bold text-lg mb-2 text-teal-400">Gerenciamento de Contexto</h4>
+                        <p class="text-zinc-400 text-sm break-words">Manter o estado da conversa e informações ambientais relevantes (hora, localização) é crucial para respostas coerentes e personalizadas.</p>
+                    </div>
+                    <div class="bg-zinc-800 p-6 rounded-lg border border-zinc-700 shadow-xl">
+                        <h4 class="font-bold text-lg mb-2 text-teal-400">Observabilidade (Logging e Rastreamento)</h4>
+                        <p class="text-zinc-400 text-sm break-words">Mensagens de `print` são usadas para indicar o fluxo de execução e o estado interno, facilitando a depuração e o entendimento do comportamento do sistema.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="structure" class="content-section">
+                <h2 class="text-3xl font-bold text-sky-400 mb-2">Estrutura do Projeto e Racional de Design</h2> 
+                <p class="text-zinc-400 mb-8 break-words">A organização do Projeto Aurora foi cuidadosamente pensada para promover a <strong>separação de preocupações (Separation of Concerns)</strong>, agrupando funcionalidades relacionadas em módulos lógicos. Isso garante que cada parte do sistema tenha um propósito claro e bem definido, facilitando o desenvolvimento, a manutenção e futuras expansões. Pense em cada módulo como uma região especializada do cérebro da Aurora, trabalhando em conjunto para sua inteligência.</p>
+                
+                <div class="relative bg-zinc-800 p-6 rounded-lg border border-zinc-700 shadow-xl overflow-x-auto"> <pre class="text-xs text-zinc-100 break-words"><code>
+.
+├── audio/                    # Camada de Interface: Entrada/Saída de áudio (STT/TTS)
+│   └── speak.py              # Responsável por converter voz em texto e texto em voz.
+├── conscience/               # Camada de Consciência/Contexto: Gerenciamento de estado e atributos da assistente
+│   ├── context_manager.py    # Gerencia informações como hora e localização.
+│   ├── persona_manager.py    # Define a personalidade da Aurora.
+│   └── usage_tracker.py      # Monitora o uso de APIs externas.
+├── core/                     # Camada de Orquestração: Onde o fluxo principal da aplicação é coordenado
+│   └── assistant.py          # O "cérebro" que coordena todas as ações.
+├── llm/                      # Camada de Integração: Interação com Modelos de Linguagem Grandes (IA)
+│   └── generator.py          # Faz a ponte com a IA (Gemini) e suas ferramentas.
+├── logic_memory/             # Camada de Persistência/Lógica de Memória: Gerenciamento e armazenamento do conhecimento
+│   ├── add_dialogue_entry.py # Adiciona registros de diálogos.
+│   ├── add_learned_fact.py  # Adiciona fatos importantes aprendidos.
+│   ├── add_person.py        # Gerencia informações sobre pessoas.
+│   ├── consolidate_memory.py# Consolida e persiste novas informações.
+│   ├── dialogue_processor.py# Processa diálogos para extrair dados para a memória.
+│   ├── general_memory.py    # Utilitários gerais para manipulação de arquivos de memória.
+│   ├── knowledge_loader.py  # Carrega o conhecimento da Aurora ao iniciar.
+│   └── test_memory_system.py# Scripts para testar o sistema de memória.
+├── memories/                # Camada de Dados: Armazenamento físico dos dados persistentes (arquivos JSON)
+│   ├── dialogues.json       # Registros de conversas passadas.
+│   ├── facts.json           # Fatos importantes que a Aurora aprendeu.
+│   └── people.json          # Informações sobre pessoas conhecidas.
+├── nlp/                     # Camada de Processamento: Lógica inicial de Processamento de Linguagem Natural
+│   └── processing.py        # Identifica a intenção básica das frases.
+├── tools/                   # Camada de Ferramentas: Wrappers para APIs externas que a IA pode usar
+│   ├── weather_tool.py      # Ferramenta para buscar dados de clima.
+│   └── web_search_tool.py   # Ferramenta para realizar pesquisas na web.
+├── .env                     # Configuração: Variáveis de ambiente sensíveis (chaves de API)
+├── main.py                  # Ponto de Entrada: Inicia a aplicação.
+└── requirements.txt         # Dependências: Lista de pacotes Python necessários.
+                    </code></pre>
+                </div>
+            </section>
+
+            <section id="howitworks" class="content-section">
+                <h2 class="text-3xl font-bold text-sky-400 mb-2">Como a Aurora Funciona: Arquitetura em Detalhes</h2>
+                <p class="text-zinc-400 mb-8 break-words">A Aurora foi construída com uma estrutura clara e organizada, onde cada 'cômodo' (módulo) tem uma função específica, tornando o sistema robusto e fácil de entender. Clique em um componente para explorar seus detalhes e responsabilidades técnicas. A organização do projeto reflete uma abordagem em camadas e por domínios, promovendo a clareza e a separação de responsabilidades.</p>
+                <div class="lg:flex lg:space-x-8">
+                    <div class="lg:w-1/2">
+                        <h3 class="text-2xl font-bold text-sky-400 mb-4">Componentes Principais</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div data-component="core" class="diagram-box bg-zinc-800 p-4 rounded-lg border border-zinc-700 text-center">
+                                <h4 class="font-bold text-indigo-700">Core</h4>
+                                <p class="text-xs text-zinc-400 break-words">Orquestração Central</p>
+                            </div>
+                            <div data-component="llm" class="diagram-box bg-zinc-800 p-4 rounded-lg border border-zinc-700 text-center">
+                                <h4 class="font-bold text-indigo-700">LLM</h4>
+                                <p class="text-xs text-zinc-400 break-words">Integração com IA</p>
+                            </div>
+                            <div data-component="logic_memory" class="diagram-box bg-zinc-800 p-4 rounded-lg border border-zinc-700 text-center col-span-2">
+                                <h4 class="font-bold text-indigo-700">Logic Memory</h4>
+                                <p class="text-xs text-zinc-400 break-words">Persistência e Lógica de Memória</p>
+                            </div>
+                            <div data-component="conscience" class="diagram-box bg-zinc-800 p-4 rounded-lg border border-zinc-700 text-center">
+                                <h4 class="font-bold text-indigo-700">Conscience</h4>
+                                <p class="text-xs text-zinc-400 break-words">Gerenciamento de Estado</p>
+                            </div>
+                            <div data-component="tools" class="diagram-box bg-zinc-800 p-4 rounded-lg border border-zinc-700 text-center">
+                                <h4 class="font-bold text-indigo-700">Tools</h4>
+                                <p class="text-xs text-zinc-400 break-words">APIs Externas</p>
+                            </div>
+                            <div data-component="audio" class="diagram-box bg-zinc-800 p-4 rounded-lg border border-zinc-700 text-center">
+                                <h4 class="font-bold text-indigo-700">Audio</h4>
+                                <p class="text-xs text-zinc-400 break-words">Interface de Áudio</p>
+                            </div>
+                            <div data-component="nlp" class="diagram-box bg-zinc-800 p-4 rounded-lg border border-zinc-700 text-center">
+                                <h4 class="font-bold text-indigo-700">NLP</h4>
+                                <p class="text-xs text-zinc-400 break-words">Processamento de Linguagem</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="architecture-details" class="lg:w-1/2 mt-8 lg:mt-0 bg-zinc-800 p-6 rounded-lg border border-zinc-700 min-h-[300px] shadow-xl">
+                        <p class="text-zinc-400 break-words">Selecione um componente para ver os detalhes.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="flow" class="content-section">
+                <h2 class="text-3xl font-bold text-sky-400 mb-2">Fluxo de Execução Principal</h2>
+                <p class="text-zinc-400 mb-8 break-words">O ciclo de vida da Aurora segue um padrão de <strong>percepção-ação-memória</strong>. Navegue pelos passos para entender como a assistente processa uma interação do usuário, desde a captura da fala até a consolidação do conhecimento.</p>
+                <div class="bg-zinc-800 p-6 rounded-lg border border-zinc-700 shadow-xl">
+                    <div id="flow-steps-container" class="space-y-4">
+                    </div>
+                    <div class="mt-6 flex justify-between">
+                        <button id="prev-step-btn" class="px-4 py-2 bg-zinc-700 text-zinc-100 rounded-md hover:bg-zinc-600 disabled:opacity-50 disabled:cursor-not-allowed transition duration-200 ease-in-out">Anterior</button>
+                        <button id="next-step-btn" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition duration-200 ease-in-out">Próximo</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="memory" class="content-section">
+                <h2 class="text-3xl font-bold text-sky-400 mb-2">A Memória da Aurora: Persistência de Dados</h2>
+                <p class="text-zinc-400 mb-8 break-words">A Aurora tem uma memória especial! Este subsistema é fundamental para a capacidade da Aurora de "aprender" e manter o estado através das sessões. Ele gerencia o armazenamento de informações importantes, permitindo que a assistente se lembre de coisas que você disse, de fatos relevantes e de conversas passadas. A persistência é baseada em arquivos JSON para simplicidade, mas é projetada para ser extensível a soluções de banco de dados. Inspecione os dados que a Aurora aprendeu e armazenou em seus arquivos de memória persistente.</p>
+                <div class="border-b border-zinc-700 mb-4">
+                    <nav class="-mb-px flex space-x-6" aria-label="Tabs">
+                        <button class="memory-tab active whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" data-memory="people">Pessoas</button>
+                        <button class="memory-tab whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm hover:text-zinc-200" data-memory="facts">Fatos Aprendidos</button>
+                        <button class="memory-tab whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm hover:text-zinc-200" data-memory="dialogues">Diálogos</button>
+                    </nav>
+                </div>
+                <div id="memory-content" class="bg-zinc-800 p-6 rounded-lg border border-zinc-700 min-h-[400px] shadow-xl"> </div>
+            </section>
+
+            <section id="versioning" class="content-section">
+                <h2 class="text-3xl font-bold text-sky-400 mb-2">Versionamento do Projeto Aurora</h2>
+                <p class="text-zinc-400 mb-8 break-words">O Projeto Aurora está em constante evolução! Abaixo, detalhamos as principais versões e as funcionalidades que foram implementadas em cada etapa, mostrando o progresso e o desenvolvimento do sistema.</p>
+                <div id="versioning-container" class="space-y-4">
+                </div>
+            </section>
+
+            <section id="roadmap" class="content-section">
+                <h2 class="text-3xl font-bold text-sky-400 mb-2">O Futuro da Aurora: Roadmap e Melhorias Potenciais</h2>
+                <p class="text-zinc-400 mb-8 break-words">Para transformar este protótipo em um sistema de assistente virtual de nível de produção, várias áreas podem ser aprimoradas e expandidas. Explore as sugestões detalhadas para o futuro desenvolvimento do Projeto Aurora, que a farão aprender mais rápido, entender melhor e interagir de formas ainda mais incríveis, abordando aspectos cruciais para escalabilidade e funcionalidades avançadas.</p>
+                <div id="roadmap-container" class="space-y-4">
+                </div>
+            </section>
+        </main>
+        
+    </div>
+    <footer class="bg-zinc-800 text-zinc-400 text-center py-1 border-t border-zinc-700">
+        <div class="max-w-full mx-auto px-4">
+            <p class="text-xs text-zinc-400 break-words"> Documentação do Projeto <strong class="text-sky-400">Aurora &copy; 2025</strong>. Desenvolvido por <strong class="text-zinc-300">Raphael O. A. P. Lima</strong> (Estudante de Eng. de Software) com a assistência de <strong class="text-sky-400">Gemini IA</strong>.
+            </p>
+        </div>
+    </footer>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const projectData = {
+                core: {
+                    title: 'core/ - Orquestração Central (`assistant.py`)',
+                    description: 'Atua como o <strong>`Controller` principal</strong> ou o <strong>"cérebro orquestrador"</strong> da assistente. É o ponto de entrada lógico para as interações do usuário e coordena a comunicação entre todos os outros módulos. Implementa o padrão <strong>Facade</strong> ao fornecer uma interface simplificada para o ciclo de vida da assistente.',
+                    keyFile: 'assistant.py',
+                    responsibilities: [
+                        '<strong>Inicialização</strong>: No `__init__`, todas as dependências são injetadas (ou instanciadas internamente, como `ChatHistory`, `ContextManager`, etc.). Isso segue o princípio de <strong>Dependency Inversion</strong> ao depender de abstrações (interfaces de módulos) em vez de implementações concretas (embora aqui as "abstrações" sejam os próprios módulos Python).',
+                        '<strong>`run()` Método</strong>: O loop principal que gerencia o ciclo de vida da interação:<ol class="list-decimal list-inside ml-4 mt-1"><li><strong>Percepção (STT)</strong>: `ouvir_microfone()` (do `audio/speak.py`) captura a entrada do usuário.</li><li><strong>Classificação de Intenção</strong>: `processar_texto()` (do `nlp/processing.py`) determina a intenção primária.</li><li><strong>Geração de Resposta</strong>: `_obter_resposta()` roteia a solicitação.</li><li><strong>Ação (TTS)</strong>: `falar()` (do `audio/speak.py`) vocaliza a resposta.</li></ol>',
+                        '<strong>Gerenciamento de Diálogo</strong>: Mantém `self.current_dialogue_transcript` para a sessão ativa. Ao detectar uma intenção de "despedida", invoca `_process_and_commit_memory_from_last_dialogue`, que delega ao `dialogue_processor` para a análise e persistência da memória.',
+                        '<strong>Intenções Pré-definidas</strong>: Gerencia um dicionário `self.respostas` para lidar com intenções simples e de alta frequência (saudações, horas, agradecimentos) diretamente, evitando a latência e o custo de uma chamada ao LLM para casos triviais.',
+                        '<strong>Controle de Uso de Ferramentas</strong>: Integra `UsageTracker` (`conscience/usage_tracker.py`) para impor limites de requisição a ferramentas externas (e.g., Google Search). Isso é crucial para gerenciar custos de API e evitar abusos. A mensagem de limite excedido é tratada diretamente aqui.',
+                    ]
+                },
+                llm: {
+                    title: 'llm/ - Integração com Modelos de Linguagem (`generator.py`)',
+                    description: 'A camada de abstração e interface para a API Gemini (Google Generative AI). É o componente que interage diretamente com o LLM e orquestra a execução de ferramentas.',
+                    keyFile: 'generator.py',
+                    responsibilities: [
+                        '<strong>Configuração de API</strong>: Carrega a `GEMINI_API_KEY` do `.env`.',
+                        '<strong>Inicialização do Modelo</strong>: Instancia `genai.GenerativeModel(\'models/gemini-1.5-flash-latest\')`.',
+                        '<strong>Tool Calling (Chamada de Ferramentas)</strong>: Este é um dos <strong>pontos mais críticos e avançados</strong> da arquitetura:<ol class="list-decimal list-inside ml-4 mt-1"><li><strong>Registro de Ferramentas</strong>: O modelo é inicializado com uma lista de funções Python (`tools=[get_weather_data, search_web]`).</li><li><strong>Detecção de `function_call`</strong>: Quando o LLM retorna uma `function_call` em vez de uma resposta textual direta.</li><li><strong>Execução da Ferramenta</strong>: O `LLMGenerator` intercepta essa `function_call`, extrai o nome da ferramenta e seus argumentos, e executa a função Python correspondente.</li><li><strong>Injeção do Resultado</strong>: O resultado da execução da ferramenta é enviado de volta ao LLM para gerar uma resposta final.</li></ol>',
+                        '<strong>Gerenciamento de Histórico</strong>: `chat_session = self.registered_tools_model.start_chat(history=self.chat_history_instance.get_history())` garante o contexto conversacional completo.',
+                        '<strong>Injeção de Persona</strong>: O `persona_prompt` do `PersonaManager` é concatenado ao `user_text` para influenciar o estilo e o tom das respostas do LLM.',
+                        '<strong>Tratamento de Erros</strong>: Inclui blocos `try-except` abrangentes para capturar erros na chamada da API Gemini ou no processamento da resposta.',
+                    ]
+                },
+                logic_memory: {
+                    title: 'logic_memory/ - Sistema de Memória Persistente',
+                    description: 'Este subsistema é o coração da capacidade da Aurora de "aprender" e manter o estado através das sessões. É um exemplo de <strong>Memória de Curto e Médio Prazo</strong> (histórico de chat) e <strong>Memória de Longo Prazo</strong> (fatos, pessoas, diálogos).',
+                    keyFile: 'general_memory.py, chat_history.py, add_dialogue_entry.py, add_learned_fact.py, add_person.py, consolidate_memory.py, dialogue_processor.py, knowledge_loader.py',
+                    responsibilities: [
+                        '<strong>`general_memory.py`</strong>: Fornece utilitários de baixo nível para gerenciamento de arquivos JSON e geração de IDs únicos.',
+                        '<strong>`chat_history.py`</strong>: Gerencia o histórico de mensagens trocadas com o LLM dentro de uma <strong>sessão conversacional ativa</strong>.',
+                        '<strong>`add_dialogue_entry.py`</strong>: Adiciona um registro de um diálogo completo ao arquivo `dialogues.json`.',
+                        '<strong>`add_learned_fact.py`</strong>: Persiste fatos importantes extraídos da conversa no arquivo `facts.json`.',
+                        '<strong>`add_person.py`</strong>: Gerencia informações sobre indivíduos (usuários, amigos, etc.) no arquivo `people.json`.',
+                        '<strong>`consolidate_memory.py`</strong>: Atua como a <strong>camada de serviço de consolidação de memória de alto nível</strong>.',
+                        '<strong>`dialogue_processor.py`</strong>: Atua como um <strong>processador de pós-diálogo</strong>, extraindo informações valiosas do histórico de uma conversa para serem persistidas.',
+                        '<strong>`knowledge_loader.py`</strong>: Carrega todas as bases de conhecimento (memórias) persistidas ao iniciar o sistema, restaurando o estado da assistente.',
+                    ]
+                },
+                conscience: {
+                    title: 'conscience/ - Consciência e Gerenciamento de Estado',
+                    description: 'Gerencia o contexto dinâmico, ambiental e atributos da assistente, como a persona e limites de uso.',
+                    keyFile: 'context_manager.py, persona_manager.py, usage_tracker.py',
+                    responsibilities: [
+                        '<strong>`context_manager.py`</strong>: Gerencia o contexto dinâmico e ambiental da assistente, como a hora atual e a localização geográfica.',
+                        '<strong>`persona_manager.py`</strong>: Encapsula a definição da <strong>personalidade (persona)</strong> da assistente virtual.',
+                        '<strong>`usage_tracker.py`</strong>: Implementa um <strong>mecanismo de rate limiting</strong> simples para APIs externas, controlando o consumo diário.',
+                    ]
+                },
+                tools: {
+                    title: 'tools/ - Ferramentas Externas',
+                    description: 'Esses módulos atuam como <strong>adaptadores ou wrappers</strong> para APIs externas, seguindo o princípio da <strong>Single Responsibility Principle</strong> (SRP) e <strong>Dependency Inversion</strong> (o LLM depende de uma interface de ferramenta, não da implementação específica da API).',
+                    keyFile: 'weather_tool.py, web_search_tool.py',
+                    responsibilities: [
+                        '<strong>`weather_tool.py`</strong>: Interage com a WeatherAPI.com para obter dados de clima.',
+                        '<strong>`web_search_tool.py`</strong>: Realiza pesquisas na web usando a Google Custom Search API.',
+                    ]
+                },
+                audio: {
+                    title: 'audio/ - Interface de Áudio (`speak.py`)',
+                    description: 'Fornece as capacidades de <strong>Speech-to-Text (STT)</strong> e <strong>Text-to-Speech (TTS)</strong>, atuando como a camada de interface de áudio do sistema.',
+                    keyFile: 'speak.py',
+                    responsibilities: [
+                        '<strong>`ouvir_microfone()` (STT)</strong>: Utiliza a biblioteca `SpeechRecognition` para interagir com o microfone.',
+                        '<strong>`falar(texto)` (TTS)</strong>: Utiliza a biblioteca `gTTS` para converter texto em fala.',
+                    ]
+                },
+                nlp: {
+                    title: 'nlp/ - Processamento de Linguagem Natural (`processing.py`)',
+                    description: 'Realiza uma <strong>classificação de intenção (Intent Classification)</strong> inicial e básica da entrada do usuário. Atua como uma camada inicial de roteamento.',
+                    keyFile: 'processing.py',
+                    responsibilities: [
+                        '<strong>`processar_texto(texto)`</strong>: Implementa uma abordagem de <strong>classificação de intenção baseada em regras (Rule-Based Intent Classification)</strong>.',
+                    ]
+                }
+            };
+
+            const flowSteps = [
+                { title: "1. Inicialização do Sistema (`main.py` -> `Assistant.__init__`)", description: "O script `main.py` é o ponto de entrada. Ele instancia a classe `Assistant`. Dentro de `Assistant.__init__`: `load_dotenv()` carrega as variáveis do `.env`. Instâncias de `ChatHistory`, `ContextManager`, `PersonaManager`, `UsageTracker` são criadas, cada uma com suas responsabilidades iniciais. O `LLMGenerator` é instanciado, que por sua vez configura a `genai.configure` com a `GEMINI_API_KEY`, carrega o modelo `gemini-1.5-flash-latest`, e <strong>registra as funções das ferramentas (`get_weather_data`, `search_web`) com o modelo LLM</strong>. Finalmente, `knowledge_loader.load_all_knowledge()` carrega o estado persistido da assistente." },
+                { title: "2. Loop de Interação Contínua (`Assistant.run()`) - Percepção (STT)", description: "O `while True` em `run()` mantém a assistente ativa. Na fase de <strong>Percepção (STT)</strong>, `ouvir_microfone()` captura o áudio do usuário e o converte em texto. Se o áudio for reconhecido com sucesso, o texto é retornado. Caso contrário, retorna `None`. A fala do usuário é então adicionada ao `ChatHistory` e ao `current_dialogue_transcript` da sessão atual." },
+                { title: "3. Loop de Interação Contínua - Processamento de Intenção (NLU - Regras)", description: "O texto do usuário é passado para o módulo `nlp/processing.py`, onde `intencao = processar_texto(fala_do_usuario)` realiza uma classificação de intenção baseada em palavras-chave para inferir a intenção primária do usuário." },
+                { title: "4. Loop de Interação Contínua - Geração de Resposta (Roteamento)", description: "Em `core/assistant.py`, o método `_obter_resposta(intencao, texto_original)` decide o próximo passo. Se a intenção for simples e pré-definida (e.g., 'saudação', 'pedir_horas'), uma resposta direta é fornecida. Se for 'pesquisar_web', o `UsageTracker` é consultado para verificar a cota diária. Para qualquer outra `intencao`, a requisição é delegada diretamente ao `LLMGenerator`." },
+                { title: "5. Loop de Interação Contínua - Geração LLM & Tool Calling", description: "O `llm/generator.py` envia o prompt (com persona e histórico) para a API Gemini. <strong>Lógica de Tool Calling</strong>: Se o LLM decidir invocar uma ferramenta (e.g., `get_weather_data` ou `search_web`), ele retorna uma `function_call`. O `LLMGenerator` executa a função Python correspondente, e o `tool_result` (o output da ferramenta) é enviado de volta ao LLM. O LLM, com o resultado da ferramenta em mãos, gera a resposta final para o usuário." },
+                { title: "6. Loop de Interação Contínua - Ação (TTS)", description: "A resposta textual final, seja ela pré-definida ou gerada pelo LLM (após ou sem Tool Calling), é convertida em áudio por `falar()` no módulo `audio/` e reproduzida para o usuário, completando o ciclo de interação." },
+                { title: "7. Processamento Pós-Diálogo e Consolidação da Memória", description: "Este método é acionado no final de um diálogo (atualmente, quando a intenção 'despedida' é detectada). O `dialogue_processor.py` recebe a transcrição completa do diálogo, usa o LLM para sumarizar a conversa e extrair fatos importantes em formato JSON. Esses dados são então passados para `consolidate_memory.py`, que persiste o resumo do diálogo, os fatos aprendidos e atualiza as informações sobre as pessoas nos arquivos JSON. O histórico da sessão atual é limpo." }
+            ];
+
+            const memoryData = {
+                people: {
+                    title: 'Pessoas (people.json)',
+                    description: 'Este arquivo é como a "agenda de contatos" da Aurora. Ele guarda informações sobre as pessoas que ela conhece, como você! Cada pessoa tem um identificador único e detalhes importantes, como o nome principal e quando foi a última vez que conversaram. Isso ajuda a Aurora a personalizar as interações.',
+                    data: [
+                        { "person_id": "fbd145fc-1107-4ede-9ed4-744530f18c83", "main_name": "Raphael", "aliases": [], "first_contact_utc": "2025-05-29T13:03:16Z", "last_interaction_utc": "2025-05-29T13:03:16Z", "category": "principal_user", "relevant_facts_ids": [] }
+                    ]
+                },
+                facts: {
+                    title: 'Fatos Aprendidos (facts.json)',
+                    description: 'Este é o "caderno de fatos" da Aurora. Aqui ela anota tudo o que aprende de importante, como "o nome do usuário é Raphael". Cada fato é classificado por tema e tem uma referência à conversa onde foi aprendido, para que a Aurora possa consultar e usar essas informações no futuro.',
+                    data: [
+                        { "fact_id": "4e663245-c30e-4481-8652-631ce8156eb6", "content": "O usuário principal se chama Raphael.", "theme": "informacao_pessoal_usuario", "source_dialogue_id": "25336793-3b50-4dc6-b61a-00a34c6d5beb", "timestamp_learned_utc": "2025-05-29T13:03:16Z", "associated_people_ids": ["fbd145fc-1107-4ede-9ed4-744530f18c83"] }
+                    ]
+                },
+                dialogues: {
+                    title: 'Diálogos (dialogues.json)',
+                    description: 'Este arquivo é como o "diário de conversas" da Aurora. Ele registra um resumo de cada interação, quem participou e quais fatos importantes foram aprendidos durante aquela conversa. É um histórico de alto nível que ajuda a Aurora a entender o contexto de suas interações ao longo do tempo.',
+                    data: [
+                        { "dialogue_id": "25336793-3b50-4dc6-b61a-00a34c6d5beb", "timestamp_start_utc": "2025-05-29T13:03:16.830460+00:00", "timestamp_end_utc": "2025-05-29T13:03:16.830460+00:00", "participants_ids": ["fbd145fc-1107-4ede-9ed4-744530f18c83"], "main_type": "desconhecido", "llm_summary": "Usuário se apresentou como Raphael. Trocamos saudações.", "user_input_transcript": "...", "aurora_response_transcript": "...", "generated_facts_ids": ["4e663245-c30e-4481-8652-631ce8156eb6"] }
+                    ]
+                }
+            };
+
+            const versioningData = [
+                {
+                    title: 'Versão 1.0 - Conceito Inicial e Core (MVP)',
+                    date: 'Início do Projeto',
+                    changes: [
+                        'Definição da arquitetura modular inicial do Projeto Aurora.',
+                        'Implementação dos módulos de áudio (STT/TTS) para interação por voz.',
+                        'Criação do módulo de processamento de linguagem natural básico (NLP) para classificação de intenções simples.',
+                        'Integração inicial do LLM (Google Gemini) para geração de respostas, sem uso de ferramentas externas.',
+                        'Estabelecimento do loop principal de interação na classe `Assistant`.',
+                    ]
+                },
+                {
+                    title: 'Versão 1.1 - Ferramentas Externas e Contexto',
+                    date: 'Fase de Integração',
+                    changes: [
+                        'Implementação e integração das ferramentas externas: `weather_tool.py` (clima) e `web_search_tool.py` (pesquisa web).',
+                        'Desenvolvimento da lógica de `Tool Calling` no `LLMGenerator`, permitindo que o LLM invoque e utilize essas ferramentas.',
+                        'Criação do `ContextManager` para gerenciar informações de contexto dinâmico, como hora atual e localização (via IP-API.com).',
+                        'Inclusão do uso do contexto nas respostas da assistente.',
+                    ]
+                },
+                {
+                    title: 'Versão 1.2 - Memória Persistente (JSON)',
+                    date: 'Fase de Aprendizado',
+                    changes: [
+                        'Implementação completa do subsistema `logic_memory/` para persistência de dados em arquivos JSON.',
+                        'Criação dos arquivos de memória: `people.json` (informações de pessoas), `facts.json` (fatos aprendidos), `dialogues.json` (resumos de conversas).',
+                        'Desenvolvimento das funções `add_person`, `add_learned_fact`, `add_dialogue_entry` para gerenciar a escrita desses dados.',
+                        'Criação do `dialogue_processor` para usar o LLM na sumarização de diálogos e extração de fatos importantes para a memória.',
+                        'Implementação do `consolidate_memory` para orquestrar a persistência pós-diálogo.',
+                    ]
+                },
+                {
+                    title: 'Versão 1.3 - Gerenciamento de Uso e Persona',
+                    date: 'Refinamento da Experiência',
+                    changes: [
+                        'Adição do `PersonaManager` para definir e injetar a personalidade da Aurora nas respostas do LLM, tornando as interações mais engajantes.',
+                        'Implementação do `UsageTracker` para controlar o uso diário de APIs externas (ex: Google Search), prevenindo excedentes de cota e gerenciando custos.',
+                        'Melhorias no tratamento de erros e mensagens de feedback para o usuário em caso de falhas de API ou limites excedidos.',
+                    ]
+                },
+                {
+                    title: 'Versão 1.4 - Refinamentos e Robustez',
+                    date: 'Otimização',
+                    changes: [
+                        'Otimizações no `ChatHistory` para gerenciar a janela de contexto enviada ao LLM, melhorando latência e custo.',
+                        'Aprimoramentos no tratamento de exceções em todos os módulos para maior resiliência do sistema.',
+                        'Limpeza de recursos (e.g., remoção de arquivos de áudio temporários) para manter o sistema eficiente.',
+                        'Revisão e melhoria da clareza do código e dos logs de console.',
+                    ]
+                },
+                {
+                    title: 'Versão 2.0 - Consolidação e Preparação para Escala (Versão Atual)',
+                    date: 'Atual',
+                    changes: [
+                        'Arquitetura consolidada e modularizada para facilitar futuras expansões (e.g., migração para bancos de dados, NLU avançado).',
+                        'Geração de documentação técnica aprofundada para cada componente e fluxo do sistema (este portfólio).',
+                        'Criação da interface interativa do portfólio para apresentar o projeto de forma clara e acessível.',
+                        'Base sólida para o desenvolvimento de funcionalidades mais complexas e escaláveis no roadmap.',
+                    ]
+                }
+            ];
+            
+            const roadmapData = [
+                { 
+                    title: 'Sistema de Memória Avançado (Escalabilidade e Complexidade)', 
+                    content: 'A migração de arquivos JSON para um banco de dados relacional (e.g., PostgreSQL, SQLite) ou NoSQL (e.g., MongoDB, Firestore, Cassandra) é crucial para concorrência, grandes volumes de dados ou consultas complexas. Para memória de longo prazo, a implementação de RAG (Retrieval Augmented Generation) com uma Vector Database (e.g., Pinecone, Weaviate, Chroma) permitiria que o LLM "consultasse" uma base de conhecimento externa de fatos e diálogos convertidos em embeddings. Explorar grafos de conhecimento (e.g., Neo4j) poderia representar e consultar relações complexas entre entidades e fatos, permitindo inferências lógicas e respostas mais precisas. Além disso, implementar uma camada de abstração de dados (DAO/Repository pattern) para desacoplar a lógica de memória do armazenamento subjacente seria fundamental.' 
+                },
+                { 
+                    title: 'NLU (Natural Language Understanding) Aprimorado', 
+                    content: 'A classificação de intenção baseada em regras em `processing.py` é frágil e não escala. Deveria ser substituída por modelos de Machine Learning (e.g., usando `scikit-learn` com features de texto, ou modelos de Deep Learning como BERT/RoBERTa via `Hugging Face Transformers`) para maior precisão e flexibilidade. A adição de Extração de Entidades Nomeadas (NER) seria vital para identificar e categorizar entidades (pessoas, locais, datas, organizações) no texto do usuário, o que é crucial para preencher "slots" em diálogos orientados a tarefas. A resolução de correferência (entender pronomes como "ele", "ela", "isso" em relação a entidades mencionadas anteriormente) também aprimoraria a fluidez da conversa.' 
+                },
+                { 
+                    title: 'Gerenciamento de Diálogo Sofisticado', 
+                    content: 'Implementar um Gerenciador de Diálogo baseado em estado ou diálogo orientado a tarefas é fundamental para lidar com conversas multi-turno onde a assistente precisa coletar várias informações para completar uma tarefa (e.g., "Agendar um lembrete para amanhã às 10h sobre a reunião com o João"). Isso envolveria modelar o diálogo como um estado finito ou um grafo de estados, onde cada estado representa um passo na tarefa e o sistema sabe quais "slots" (informações) precisam ser preenchidos. Manter um modelo de contexto mais complexo que inclua não apenas o histórico de mensagens, mas também slots preenchidos, intenções ativas, e o estado atual da tarefa, seria crucial.' 
+                },
+                { 
+                    title: 'Expansão de Ferramentas e Gerenciamento', 
+                    content: 'Integrar uma gama maior de ferramentas (e.g., API de calendário, API de e-mail, API de controle de casa inteligente, APIs de e-commerce) é um passo natural. Desenvolver um registro de ferramentas dinâmico permitiria que novas ferramentas fossem registradas e disponibilizadas ao LLM sem a necessidade de modificar o código do `LLMGenerator` diretamente. Isso pode envolver um registro de ferramentas em um banco de dados ou um serviço de descoberta de ferramentas. Além disso, implementar validação mais robusta para os argumentos que o LLM sugere para as ferramentas, garantindo que sejam do tipo e formato correto, seria importante.' 
+                },
+                { 
+                    title: 'Monitoramento, Logging e Telemetria', 
+                    content: 'Substituir `print()` por um sistema de logging profissional (e.g., o módulo `logging` do Python, configurado para diferentes níveis de log: DEBUG, INFO, WARNING, ERROR, CRITICAL) é essencial para depuração e monitoramento em produção. Coletar métricas de desempenho (latência de LLM, tempo de execução de ferramentas, taxa de sucesso de STT/TTS), uso de recursos e erros. Integrar com ferramentas de monitoramento (e.g., Prometheus, Grafana, ELK stack). Em um ambiente de microsserviços, implementar rastreamento distribuído (e.g., OpenTelemetry) para visualizar o fluxo de requisições através de múltiplos serviços seria um avanço significativo.' 
+                },
+                { 
+                    title: 'Implantação e Infraestrutura', 
+                    content: 'Empacotar a aplicação em contêineres Docker para garantir que ela execute de forma consistente em qualquer ambiente (desenvolvimento, teste, produção), isolando-la do sistema operacional subjacente. Para gerenciar a implantação, escalabilidade e resiliência de múltiplos contêineres (se a arquitetura evoluir para microsserviços), a orquestração (Kubernetes) seria necessária. Considerar a implantação em provedores de nuvem (AWS, Google Cloud, Azure) para STT/TTS gerenciados, APIs de LLM, bancos de dados e escalabilidade sob demanda é um passo crucial para produção.' 
+                },
+                { 
+                    title: 'Tratamento de Erros e Resiliência', 
+                    content: 'Implementar padrões de <strong>Circuit Breaker</strong> para chamadas de API externas é vital: se uma API externa estiver falhando consistentemente, o circuit breaker pode "abrir" para evitar chamadas adicionais, protegendo o sistema e permitindo que a API se recupere. Para falhas temporárias de rede ou API, implementar lógicas de <strong>retry</strong> com <strong>backoff exponencial</strong> para tentar novamente a operação após intervalos crescentes. Desenvolver respostas de fallback mais sofisticadas quando o LLM ou uma ferramenta falha (e.g., "Desculpe, não consegui obter essa informação agora, mas posso ajudar com outra coisa?") aprimoraria a experiência do usuário.' 
+                },
+                { 
+                    title: 'Interface do Usuário (UI)', 
+                    content: 'Desenvolver uma interface mais rica (e.g., usando Flask/Django para web, PyQt/Tkinter para desktop) para além da interface de linha de comando. Isso pode incluir exibição do histórico de chat, estado do contexto, visualização de fatos aprendidos, e outras interações que tornem a experiência do usuário mais intuitiva e completa.' 
+                }
+            ];
+
+            const navLinks = document.querySelectorAll('.nav-link');
+            const contentSections = document.querySelectorAll('.content-section');
+            const architectureBoxes = document.querySelectorAll('.diagram-box');
+            const architectureDetails = document.getElementById('architecture-details');
+            const flowStepsContainer = document.getElementById('flow-steps-container');
+            const prevStepBtn = document.getElementById('prev-step-btn');
+            const nextStepBtn = document.getElementById('next-step-btn');
+            const memoryTabs = document.querySelectorAll('.memory-tab');
+            const memoryContent = document.getElementById('memory-content');
+            const versioningContainer = document.getElementById('versioning-container');
+            const roadmapContainer = document.getElementById('roadmap-container');
+            let currentFlowStep = 0;
+
+            // Function to handle navigation between sections
+            function navigateTo(view) {
+                // Update active state for navigation links
+                navLinks.forEach(link => {
+                    link.classList.remove('active'); // Remove existing active class
+                    link.classList.remove('bg-zinc-100', 'text-zinc-600', 'hover:bg-zinc-100'); // Remove old classes
+                    link.classList.add('text-zinc-400', 'hover:bg-zinc-700'); // Add default classes
+                    if (link.dataset.view === view) {
+                        link.classList.add('active'); // Add active class
+                    }
+                });
+                // Show/hide content sections
+                contentSections.forEach(section => {
+                    section.classList.remove('active');
+                    if (section.id === view) {
+                        section.classList.add('active');
+                    }
+                });
+                // Reset architecture details when navigating away from 'howitworks'
+                if (view !== 'howitworks') {
+                    architectureDetails.innerHTML = '<p class="text-zinc-400 break-words">Selecione um componente para ver os detalhes.</p>';
+                    architectureBoxes.forEach(b => b.classList.remove('selected'));
+                }
+                // Reset flow step when navigating away from 'flow'
+                if (view !== 'flow') {
+                    currentFlowStep = 0;
+                    renderFlowStep(currentFlowStep);
+                }
+            }
+
+            // Event listeners for navigation links
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    navigateTo(link.dataset.view);
+                });
+            });
+
+            // Event listeners for architecture diagram boxes
+            architectureBoxes.forEach(box => {
+                box.addEventListener('click', () => {
+                    architectureBoxes.forEach(b => b.classList.remove('selected'));
+                    box.classList.add('selected');
+
+                    const componentId = box.dataset.component;
+                    const data = projectData[componentId];
+                    if (data) {
+                        // Dynamically generate responsibilities list with correct classes
+                        let responsibilitiesHtml = data.responsibilities.map(r => `<li class="text-zinc-400 text-sm break-words">${r}</li>`).join('');
+                        architectureDetails.innerHTML = `
+                            <h3 class="text-xl font-bold text-zinc-100 mb-2 break-words">${data.title}</h3>
+                            <p class="text-zinc-400 text-xs mb-4 break-words">Arquivo(s) Chave: ${data.keyFile}</p>
+                            <p class="text-zinc-300 mb-4 text-sm break-words">${data.description}</p>
+                            <h4 class="font-semibold text-zinc-100 mb-2 text-sm break-words">Responsabilidades e Implementação:</h4>
+                            <ul class="list-disc list-inside space-y-1">${responsibilitiesHtml}</ul>
+                        `;
+                    }
+                });
+            });
+
+            // Function to render flow steps
+            function renderFlowStep(index) {
+                flowStepsContainer.innerHTML = '';
+                flowSteps.forEach((step, i) => {
+                    const stepEl = document.createElement('div');
+                    stepEl.className = 'flow-step p-4 rounded-lg border-l-4';
+                    if (i === index) {
+                        stepEl.classList.add('active');
+                    }
+                    stepEl.innerHTML = `
+                        <h4 class="font-bold text-indigo-700 break-words">${step.title}</h4>
+                        <p class="text-zinc-400 text-sm mt-1 break-words">${step.description}</p>
+                    `;
+                    flowStepsContainer.appendChild(stepEl);
+                });
+                prevStepBtn.disabled = index === 0;
+                nextStepBtn.disabled = index === flowSteps.length - 1;
+            }
+
+            // Event listeners for flow navigation buttons
+            prevStepBtn.addEventListener('click', () => {
+                if (currentFlowStep > 0) {
+                    currentFlowStep--;
+                    renderFlowStep(currentFlowStep);
+                }
+            });
+
+            nextStepBtn.addEventListener('click', () => {
+                if (currentFlowStep < flowSteps.length - 1) {
+                    currentFlowStep++;
+                    renderFlowStep(currentFlowStep);
+                }
+            }
+            );
+
+            // Function to render memory content based on tab selection
+            function renderMemoryContent(memoryType) {
+                const data = memoryData[memoryType];
+                if (!data) return;
+
+                let contentHtml = `<h3 class="text-lg font-semibold text-zinc-100 mb-2 break-words">${data.title}</h3>
+                                       <p class="text-sm text-zinc-400 mb-4 break-words">${data.description}</p>
+                                       <div class="space-y-3">`;
+
+                data.data.forEach(item => {
+                    contentHtml += `<div class="bg-zinc-700 p-3 rounded-md border border-zinc-600 overflow-x-auto"> <pre class="text-xs text-zinc-300 break-words"><code>${JSON.stringify(item, null, 2)}</code></pre>
+                                        </div>`;
+                });
+
+                contentHtml += `</div>`;
+                memoryContent.innerHTML = contentHtml;
+            }
+
+            // Event listeners for memory tabs
+            memoryTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    memoryTabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    renderMemoryContent(tab.dataset.memory);
+                });
+            });
+
+            // Function to render versioning data
+            function renderVersioning() {
+                versioningData.forEach((item, index) => {
+                    const itemEl = document.createElement('div');
+                    itemEl.className = 'bg-zinc-800 p-4 rounded-lg border border-zinc-700 shadow-xl'; // Apply dark theme classes and shadow
+                    itemEl.innerHTML = `
+                        <button class="w-full text-left flex justify-between items-center focus:outline-none" data-toggle="versioning-item-${index}">
+                            <h3 class="font-bold text-lg text-indigo-700 break-words">${item.title}</h3>
+                            <span class="text-sm text-zinc-400 break-words">${item.date}</span>
+                            <svg class="w-5 h-5 text-indigo-700 transform transition-transform duration-300" data-arrow="versioning-item-${index}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div id="versioning-item-${index}" class="roadmap-item-content mt-2">
+                            <ul class="list-disc list-inside space-y-1">
+                                ${item.changes.map(change => `<li class="text-zinc-400 text-sm break-words">${change}</li>`).join('')}
+                            </ul>
+                        </div>
+                    `;
+                    versioningContainer.appendChild(itemEl);
+
+                    itemEl.querySelector(`[data-toggle="versioning-item-${index}"]`).addEventListener('click', () => {
+                        const content = document.getElementById(`versioning-item-${index}`);
+                        const arrow = itemEl.querySelector(`[data-arrow="versioning-item-${index}"]`);
+                        content.classList.toggle('expanded');
+                        arrow.classList.toggle('rotate-180');
+                    });
+                });
+            }
+            
+            // Function to render roadmap data
+            function renderRoadmap() {
+                roadmapData.forEach((item, index) => {
+                    const itemEl = document.createElement('div');
+                    itemEl.className = 'bg-zinc-800 p-4 rounded-lg border border-zinc-700 shadow-xl'; // Apply dark theme classes and shadow
+                    itemEl.innerHTML = `
+                        <button class="w-full text-left flex justify-between items-center focus:outline-none" data-toggle="roadmap-item-${index}">
+                            <h3 class="font-bold text-lg text-indigo-700 break-words">${item.title}</h3>
+                            <span class="text-sm text-zinc-400 break-words">${item.date}</span>
+                            <svg class="w-5 h-5 text-indigo-700 transform transition-transform duration-300" data-arrow="roadmap-item-${index}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div id="roadmap-item-${index}" class="roadmap-item-content mt-2">
+                            <p class="text-zinc-400 text-sm break-words">${item.content}</p>
+                        </div>
+                    `;
+                    roadmapContainer.appendChild(itemEl);
+
+                    itemEl.querySelector(`[data-toggle="roadmap-item-${index}"]`).addEventListener('click', () => {
+                        const content = document.getElementById(`roadmap-item-${index}`);
+                        const arrow = itemEl.querySelector(`[data-arrow="roadmap-item-${index}"]`);
+                        content.classList.toggle('expanded');
+                        arrow.classList.toggle('rotate-180');
+                    });
+                });
+            }
+
+            // Initial rendering calls
+            renderFlowStep(currentFlowStep);
+            renderMemoryContent('people'); // Render default memory tab
+            renderVersioning();
+            renderRoadmap();
+        });
+    </script>
+</body>
+</html>
+>>>>>>> 731cb4ab303d3069da9f1267cf48b259691cfd87
